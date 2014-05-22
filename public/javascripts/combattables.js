@@ -8,7 +8,11 @@ uk.co.markpurser.CombatTables = new function() {
                          "normal":[ 0, 192, 240, 288, 528, 432 ] };
 
     this.speedMPerTurn = function( sailSetting, windSpeed ) {
+        if( windSpeed < 0 || windSpeed > 5 ) throw new Error("Wind speed out of range");
+        if( !( sailSetting in this.speedLookup ) ) throw new Error("Invalid sail setting");
+
         return this.speedLookup[sailSetting][windSpeed];
     }
 
 }
+
