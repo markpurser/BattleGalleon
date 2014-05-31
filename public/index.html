@@ -12,7 +12,7 @@
     <script src="//code.jquery.com/jquery.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
 
-    <script src="javascripts/underscore-min-1.5.1.js"></script>
+    <script src="javascripts/underscore-min-1.6.js"></script>
     <script src="javascripts/galleon.js"></script>
     <script src="javascripts/engine.js"></script>
     <script src="javascripts/gamestate.js"></script>
@@ -66,28 +66,26 @@
                     <div class="row">
                         <h4>Commands</h4>
                     </div>
+                    <div>
+                      <p>
+                        Select ship: <select data-bind="options: galleonOptions, value: selectedGalleonOption, click: comboBoxClickSelectedShip"></select>
+                      </p>
+                    </div>
                     <div class="row">
                       <p>
                         <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
-                        <button type="button" class="btn btn-primary btn-block">Primary</button>
+                        <button type="button" class="btn btn-primary btn-block">Move</button>
                       </p>
                     </div>
                     <div class="row">
                       <p>
                         <!-- Indicates a successful or positive action -->
-                        <button type="button" class="btn btn-success btn-block">Success</button>
+                        <button type="button" class="btn btn-success btn-block">Action</button>
                       </p>
                     </div>
-                    <div class="row">
+                    <div>
                       <p>
-                        <!-- Indicates a successful or positive action -->
-                        <button type="button" class="btn btn-success btn-block">Success</button>
-                      </p>
-                    </div>
-                    <div class="row">
-                      <p>
-                        <!-- Indicates a successful or positive action -->
-                        <button type="button" class="btn btn-success btn-block">Success</button>
+                        <select data-bind="options: optionValues, value: selectedOptionValue"></select>
                       </p>
                     </div>
                 </div>
@@ -103,6 +101,7 @@
                     <div class="row">Sail Setting:</div>
                     <div class="row">Speed Rating:</div>
                     <div class="row">Crew Grade:</div>
+                    <div class="row">Move Remain:</div>
                 </div>
                 <div class="col-xs-8">
                     <div class="row">
@@ -123,6 +122,9 @@
                     <div class="row">
                       <strong data-bind="text: crewGrade"></strong>
                     </div>
+                    <div class="row">
+                      <strong data-bind="text: remainingMovement"></strong>
+                    </div>
                 </div>
             </div>
           </div>
@@ -131,7 +133,8 @@
 
     <div class="row">
         <div class="col-md-8">
-            <p>Technologies used: babylon.js, bootstrap, node.js, express, jquery, underscore.js</p>
+            <p>Based on Admiralty rules at www.wtj.com</p>
+            <p>Technologies used: knockout.js, jasmine, babylon.js, bootstrap, node.js, express, jquery, underscore.js</p>
         </div>
     </div>
 

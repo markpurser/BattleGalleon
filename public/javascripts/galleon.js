@@ -7,8 +7,12 @@
         this.heading = Math.random()*2*Math.PI;
         this.alpha = Math.random()*Math.PI*2;
         this.meshes = meshes;
-        this.status = "inirons";
-        this.sailSetting = "battle";
+
+        this.status = _.sample(["inirons","windinsails"]);
+        this.sailSetting = _.sample(["battle","normal"]);
+        this.speedRating = _.sample(["lightfast","lightslow","heavyfast","heavyslow"]);
+        this.crewGrade = _.sample(["A","B","C","D","E"]);
+        this.remainingMovement = 140;
 
         this.speedMPerTurn = function(windSpeed) {
           return uk.co.markpurser.CombatTables.speedMPerTurn(this.sailSetting, windSpeed);

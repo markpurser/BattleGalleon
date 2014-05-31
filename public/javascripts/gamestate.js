@@ -23,6 +23,10 @@
         });
     }
 
+    GameState.prototype.galleonList = function() {
+        return _.keys( this.galleonContainer );
+    }
+
     window.GameState = GameState;
 
 })(window);

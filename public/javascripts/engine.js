@@ -11,8 +11,18 @@
     Engine.prototype.start = function() {
         this.gameState.reset();
 
-        this.selectedGalleon = this.gameState.galleonContainer["Antelope"];
+        uk.co.markpurser.selectedShipViewModel.engine = this;
+        uk.co.markpurser.selectedShipViewModel.updateSelectedGalleonCallback = this.updateSelectedGalleon;
 
+        this.updateSelectedGalleon("Antelope");
+
+        uk.co.markpurser.selectedShipViewModel.populateGalleonOptions( this.gameState.galleonList() );
+
+
+    }
+
+    Engine.prototype.updateSelectedGalleon = function(name) {
+        this.selectedGalleon = this.gameState.galleonContainer[name];
         uk.co.markpurser.selectedShipViewModel.selectedShip( this.selectedGalleon, this.windSpeed );
 
     }
