@@ -11,19 +11,22 @@
     Engine.prototype.start = function() {
         this.gameState.reset();
 
-        uk.co.markpurser.selectedShipViewModel.engine = this;
-        uk.co.markpurser.selectedShipViewModel.updateSelectedGalleonCallback = this.updateSelectedGalleon;
+        // Knockout viewmodel setup
+        uk.co.markpurser.knockoutViewModel.engine = this;
+        uk.co.markpurser.knockoutViewModel.updateSelectedGalleonCallback = this.updateSelectedGalleon;
 
         this.updateSelectedGalleon("Antelope");
 
-        uk.co.markpurser.selectedShipViewModel.populateGalleonOptions( this.gameState.galleonList() );
+        uk.co.markpurser.knockoutViewModel.populateSelectShipDropDown( this.gameState.galleonList() );
 
+        // Babylon 3D viewmodel setup
+        uk.co.markpurser.babylon3DViewModel.start();
 
     }
 
     Engine.prototype.updateSelectedGalleon = function(name) {
         this.selectedGalleon = this.gameState.galleonContainer[name];
-        uk.co.markpurser.selectedShipViewModel.selectedShip( this.selectedGalleon, this.windSpeed );
+        uk.co.markpurser.knockoutViewModel.selectedShip( this.selectedGalleon, this.windSpeed );
 
     }
 

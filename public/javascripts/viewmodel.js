@@ -7,7 +7,7 @@ CrewGradeDisplayName = { "A":"A", "B":"B", "C":"C", "D":"D", "E":"E" };
 MoveActionDisplayName = { "stop":"Stop", "reducespeed":"Reduce Speed", "anchoring":"Anchoring", "rotateatanchor":"Rotate At Anchor",
                           "makesternway":"Make Sternway", "changesail":"Change Sail Setting" };
 
-function SelectedShipViewModel() {
+function KnockoutViewModel() {
     this.name = ko.observable("Destroyer");
     this.status = ko.observable("Wind in sails");
     this.speed = ko.observable("4 knots");
@@ -16,23 +16,23 @@ function SelectedShipViewModel() {
     this.crewGrade = ko.observable("A");
     this.remainingMovement = ko.observable("100");
 
-    this.galleonOptions = ko.observableArray();
-    this.selectedGalleonOption = ko.observable();
+    this.selectShipDropDownOptions = ko.observableArray();
+    this.selectShipDropDownValue = ko.observable();
 
-    this.optionValues = _.values(MoveActionDisplayName);
-    this.selectedOptionValue = ko.observable("Gamma");
+    this.moveActionDropDownOptions = _.values(MoveActionDisplayName);
+    this.moveActionDropDownValue = ko.observable();
 
     this.engine = {};
     this.updateSelectedGalleonCallback = {};
 
-    this.comboBoxClickSelectedShip = function() {
-      this.updateSelectedGalleonCallback.apply(this.engine, [this.selectedGalleonOption()]);
+    this.selectShipDropDownClicked = function() {
+      this.updateSelectedGalleonCallback.apply(this.engine, [this.selectShipDropDownValue()]);
     };
 
-    this.populateGalleonOptions = function(galleonList) {
+    this.populateSelectShipDropDown = function(galleonList) {
       self = this;
       _.each(galleonList, function(galleonItem) {
-        self.galleonOptions.push(galleonItem);
+        self.selectShipDropDownOptions.push(galleonItem);
       });
     }
 
@@ -49,11 +49,11 @@ function SelectedShipViewModel() {
       this.crewGrade( CrewGradeDisplayName[galleon.crewGrade] );
       this.remainingMovement( galleon.remainingMovement );
 
-      this.selectedGalleonOption( galleon.name );
+      this.selectShipDropDownValue( galleon.name );
     };
 }
 
-uk.co.markpurser.selectedShipViewModel = new SelectedShipViewModel();
+uk.co.markpurser.knockoutViewModel = new KnockoutViewModel();
 
 // Activates knockout.js
-ko.applyBindings(uk.co.markpurser.selectedShipViewModel);
+ko.applyBindings(uk.co.markpurser.knockoutViewModel);
