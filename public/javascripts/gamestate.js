@@ -1,13 +1,13 @@
 (function(window) {
 
     function GameState() {
-        this.startFormation =  [ { name:"Ark",       x:4,  y:6  },
-                                 { name:"Elizabeth", x:8,  y:7  },
-                                 { name:"Antelope",  x:10, y:4  },
-                                 { name:"Nonpareil", x:11, y:6  },
-                                 { name:"Hope",      x:13, y:8  },
-                                 { name:"Swiftsure", x:14, y:5  },
-                                 { name:"Swallow",   x:15, y:9  } ];
+        this.startFormation =  [ { name:"Ark",       x:19,  y:21  },
+                                 { name:"Elizabeth", x:18,  y:17  },
+                                 { name:"Antelope",  x:20, y:19  },
+                                 { name:"Nonpareil", x:21, y:21  },
+                                 { name:"Hope",      x:23, y:24  },
+                                 { name:"Swiftsure", x:24, y:20  },
+                                 { name:"Swallow",   x:25, y:24  } ];
         this.galleonContainer = {};
     }
 
@@ -26,6 +26,22 @@
     GameState.prototype.galleonList = function() {
         return _.keys( this.galleonContainer );
     }
+
+    GameState.prototype.euclideanDist = function(a, b) {
+        return Math.sqrt( pow(a.x-b.x,2) + pow(a.y-b.y,2) );
+    }
+
+    GameState.prototype.getNameOfNearestGalleon = function(location) {
+        var self = this;
+        var nearest =_.min( self.startFormation, function(sfItem) {
+            return sfItem.x;
+            //var dist = euclideanDist(location, sfItem);
+            //if(dist < minDist) minDist =  
+        });
+
+        return nearest.name;
+    }
+
 
     window.GameState = GameState;
 

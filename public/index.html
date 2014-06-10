@@ -14,6 +14,7 @@
     <script src="babylon.1.3.0.js"></script>
 
     <script src="javascripts/underscore-min-1.6.js"></script>
+    <script src="javascripts/Queue.js"></script>
     <script src="javascripts/galleon.js"></script>
     <script src="javascripts/engine.js"></script>
     <script src="javascripts/gamestate.js"></script>
@@ -23,13 +24,26 @@
     <script src="javascripts/combattables.js"></script>
 
     <style>
-        html, body {
-            width: 100%;
-            height: 100%;
-            padding: 1%;
+        /*
+        Sticky Footer by Ryan Fait
+        http://ryanfait.com/
+        */
+        * {
             margin: 0;
-            overflow: visible;
         }
+        html, body {
+            height: 100%;
+        }
+        .wrapper {
+            min-height: 100%;
+            height: auto !important;
+            height: 100%;
+            margin: 0 auto -155px; /* the bottom margin is the negative value of the footer's height */
+        }
+        .footer, .push {
+            height: 155px; /* .push must be the same height as .footer */
+        }
+
         #renderCanvas {
             width: 100%;
             height: 400px;
@@ -42,6 +56,7 @@
 </head>
 <body onload="uk.co.markpurser.BattleGalleon.main();">
 
+  <div class="wrapper">
     <header>
         <h2>Battle Galleon</h2>
     </header>
@@ -128,12 +143,14 @@
           </div>
         </div>
     </div>
+  <div class="push"></div>
+  </div>
 
-    <footer>
+    <div class="footer">
         <a href="https://github.com/markpurser/BattleGalleon">Browse code here</a><br>
         Based on Admiralty rules at www.wtj.com<br>
         Technologies used: knockout.js, jasmine, babylon.js, bootstrap, node.js, express, jquery, underscore.js
-    </footer>
+    </div>
 
     <script src="javascripts/viewmodel.js"></script>
 

@@ -3,6 +3,7 @@
     function Engine() {
         this.gameState = new GameState();
         this.selectedGalleon = {};
+        this.selectedGalleonName = {};
 
         this.windSpeed = 2;
 
@@ -20,13 +21,25 @@
         uk.co.markpurser.knockoutViewModel.populateSelectShipDropDown( this.gameState.galleonList() );
 
         // Babylon 3D viewmodel setup
+        uk.co.markpurser.babylon3DViewModel.registerCallback(this, this.updateSelectedGalleonByNearest);
+
         uk.co.markpurser.babylon3DViewModel.start();
 
     }
 
+    Engine.prototype.updateSelectedGalleonByNearest = function(location) {
+        var name = this.gameState.getNameOfNearestGalleon(location);
+        this.updateSelectedGalleon(name);
+    }
+
     Engine.prototype.updateSelectedGalleon = function(name) {
-        this.selectedGalleon = this.gameState.galleonContainer[name];
-        uk.co.markpurser.knockoutViewModel.selectedShip( this.selectedGalleon, this.windSpeed );
+        if( this.selectedGalleonName != name )
+        {
+            this.selectedGalleonName = name;
+            this.selectedGalleon = this.gameState.galleonContainer[name];
+            uk.co.markpurser.knockoutViewModel.selectedShip( this.selectedGalleon, this.windSpeed );
+            uk.co.markpurser.babylon3DViewModel.cameraTransit( { x:this.selectedGalleon.gridx, y:this.selectedGalleon.gridy } );
+        }
 
     }
 

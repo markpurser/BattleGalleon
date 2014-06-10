@@ -1,19 +1,32 @@
 
+var bvmCameraTransition = new Queue();
+var bvmEngine = {};
+var bvmUpdateSelectedGalleonCallback = {};
 
 function Babylon3DViewModel() {
 }
 
+Babylon3DViewModel.prototype.cameraTransit = function(location) {
+        bvmCameraTransition.clear();
+        bvmCameraTransition.enqueue(location);
+}
+
+Babylon3DViewModel.prototype.registerCallback = function(engine, updateSelectedGalleonCallback) {
+        bvmEngine = engine;
+        bvmUpdateSelectedGalleonCallback = updateSelectedGalleonCallback;
+}
+
+
 Babylon3DViewModel.prototype.start = function() {
 
-    var startFormation =  [ { name:"Ark",       x:1,  y:1  },
-                            { name:"Elizabeth", x:8,  y:7  },
-                            { name:"Antelope",  x:10, y:4  },
-                            { name:"Nonpareil", x:11, y:6  },
-                            { name:"Hope",      x:13, y:8  },
-                            { name:"Swiftsure", x:14, y:5  },
-                            { name:"Swallow",   x:15, y:9  } ];
+    var startFormation =  [ { name:"Ark",       x:19,  y:21  },
+                            { name:"Elizabeth", x:18,  y:17  },
+                            { name:"Antelope",  x:20, y:19  },
+                            { name:"Nonpareil", x:21, y:21  },
+                            { name:"Hope",      x:23, y:24  },
+                            { name:"Swiftsure", x:24, y:20  },
+                            { name:"Swallow",   x:25, y:24  } ];
     var galleonRenderList = {};
-
 
     var squaresize = 50;
     var halfsquaresize = squaresize/2;
@@ -30,6 +43,18 @@ Babylon3DViewModel.prototype.start = function() {
         pressed = true;
         pressMarker.x = camera.position.x + e.offsetX;
         pressMarker.y = camera.position.z - e.offsetY;
+
+        var pm = camera.getProjectionMatrix();
+        var vm = camera.getViewMatrix();
+        var wm = BABYLON.Matrix.Identity();
+        var gridIntersect = {};
+        var viewportWidth = scene.getEngine().getRenderWidth() * scene.getEngine().getHardwareScalingLevel();
+        var viewportHeight = scene.getEngine().getRenderHeight() * scene.getEngine().getHardwareScalingLevel();
+        var myRay = BABYLON.Ray.CreateNew( mousePos.x, mousePos.y, viewportWidth, viewportHeight, wm, vm, pm );
+        gridIntersect.x = myRay.origin.x + myRay.direction.x * -myRay.origin.y/myRay.direction.y;
+        gridIntersect.z = myRay.origin.z + myRay.direction.z * -myRay.origin.y/myRay.direction.y;
+
+        bvmUpdateSelectedGalleonCallback.apply(bvmEngine, [gridIntersect]);
     }
 
     function onMouseUp(e) {
@@ -55,22 +80,16 @@ Babylon3DViewModel.prototype.start = function() {
         camera.position.y -= delta;
     }
 
-    function beforeRender() {
+    function coordGridToPhysical(a) {
+        return halfsquaresize + squaresize * a;
+    }
 
-        var pm = camera.getProjectionMatrix();
-        var vm = camera.getViewMatrix();
-        var wm = BABYLON.Matrix.Identity();
-        var gridIntersect = {};
-        var viewportWidth = scene.getEngine().getRenderWidth() * scene.getEngine().getHardwareScalingLevel();
-        var viewportHeight = scene.getEngine().getRenderHeight() * scene.getEngine().getHardwareScalingLevel();
-        var myRay = BABYLON.Ray.CreateNew( mousePos.x, mousePos.y, viewportWidth, viewportHeight, wm, vm, pm );
-        gridIntersect.x = myRay.origin.x + myRay.direction.x * -myRay.origin.y/myRay.direction.y;
-        gridIntersect.z = myRay.origin.z + myRay.direction.z * -myRay.origin.y/myRay.direction.y;
+    function beforeRender() {
 
         _.each( galleonRenderList, function(galleon) {
             _.each( galleon.meshes, function(item) {
-                item.position.x = halfsquaresize + squaresize * galleon.gridx;
-                item.position.z = halfsquaresize + squaresize * galleon.gridy;
+                item.position.x = coordGridToPhysical( galleon.gridx );
+                item.position.z = coordGridToPhysical( galleon.gridy );
                 item.position.y = 0;
 
                 var s = Math.sin(galleon.heading);
@@ -83,6 +102,17 @@ Babylon3DViewModel.prototype.start = function() {
             });
             galleon.alpha += 0.01;
         });
+
+        var transit = bvmCameraTransition.peek();
+        if( transit !== undefined ) {
+            var tx = coordGridToPhysical( transit.x );
+            var tz = coordGridToPhysical( transit.y );
+            camera.position.x -= ( camera.position.x - tx ) * 0.1;
+            camera.position.z -= ( camera.position.z - tz ) * 0.1;
+            if( Math.abs( camera.position.x - tx ) < 0.5 ) {
+                bvmCameraTransition.clear();
+            }
+        }
     };
 
 
@@ -92,7 +122,7 @@ Babylon3DViewModel.prototype.start = function() {
         var babylonengine = new BABYLON.Engine(canvas, true);
         var scene = new BABYLON.Scene(babylonengine);
         scene.ambientColor = new BABYLON.Color3(0.8,0.8,0.7);
-        camera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(900, 800, 400), scene);
+        camera = new BABYLON.FreeCamera("Camera", new BABYLON.Vector3(1000, 800, 1000), scene);
         camera.rotation.x=Math.PI/2.1;
         camera.rotation.y=0.005;
         camera.maxZ = 2000;
